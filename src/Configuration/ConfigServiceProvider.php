@@ -1,6 +1,7 @@
 <?php
 namespace Perbility\Console\Configuration;
 
+use Perbility\Console\Command\ContainerBuilder;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -44,7 +45,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
     {
         $pimple['config.file'] = function (Container $c) {
             foreach ($this->locations as $location) {
-                $file = sprintf('%s/%s', $this->injectHome($location), $this->filename);
+                $file = sprintf('%s/%s', ContainerBuilder::injectHome($location), $this->filename);
                 if (file_exists($file) && is_readable($file)) {
                     return $file;
                 }
@@ -55,7 +56,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
         $pimple['config'] = function (Container $c) {
             $config = $this->defaults;
             if ($c['config.file']) {
-                $parsed = Yaml::parse($c['config.file'], true) ?? [];
+                $parsed = Yaml::parseFile($c['config.file']) ?? [];
                 if (!is_array($parsed)) {
                     throw new \RuntimeException('invalid configuration in ' . $c['config.file']);
                 }
@@ -63,17 +64,5 @@ class ConfigServiceProvider implements ServiceProviderInterface
             }
             return $config;
         };
-    }
-    
-    /**
-     * @param string $location
-     * @return string
-     */
-    protected function injectHome($location)
-    {
-        if ($location[0] !== '~') {
-            return $location;
-        }
-        return getenv('HOME') . substr($location, 1);
     }
 }
