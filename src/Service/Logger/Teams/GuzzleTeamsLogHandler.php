@@ -42,7 +42,7 @@ class GuzzleTeamsLogHandler extends TeamsLogHandler
      *
      * @return void
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $this->client->post($this->url, [
             RequestOptions::HEADERS => ['Content-Type' => 'application/json'],
