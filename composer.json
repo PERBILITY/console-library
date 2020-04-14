@@ -4,14 +4,14 @@
     "license": "proprietary",
     "require": {
         "php": "^7.2",
+        "ext-json": "*",
         "cmdisp/monolog-microsoft-teams": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "monolog/monolog": "^1.0",
         "pimple/pimple": "^3.0",
         "psr/log": "^1.0",
         "symfony/console": "^4.0",
-        "symfony/yaml": "^4.0",
-        "ext-json": "*"
+        "symfony/yaml": "^4.0"
     },
     "authors": [
         {
