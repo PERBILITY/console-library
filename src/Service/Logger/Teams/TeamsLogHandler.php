@@ -32,9 +32,9 @@ class TeamsLogHandler extends MSTeamsLogHandler
      */
     protected function getMessage(array $record)
     {
-        $sections = [[ "text" => $record['level_name'] . ": \n```" . $record['message'] . "\n```", "markdown" => true]];
+        $sections = [[ "text" => "\n```\n" . $record['level_name'] . ': ' . $record['message'], "markdown" => false]];
         if (!empty($record['context'])) {
-            $sections[] = [ "text" => "\n```" . json_encode($record['context'], JSON_PRETTY_PRINT) . "\n```", "markdown" => true];
+            $sections[] = [ "text" => json_encode($record['context']), "markdown" => false];
         }
         return new TeamsMessage([
             "summary" => $record['level_name'],
