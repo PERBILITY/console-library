@@ -36,6 +36,11 @@ class LocalStore
      */
     public function __construct($path, LoggerInterface $log)
     {
+        if (!file_exists($path)) {
+            // use `mkdir -p` -- creating path recursively with PHP is cumbersome
+            $command = sprintf('mkdir -p %s', escapeshellarg($path));
+            shell_exec($command);
+        }
         if (!is_writable($path)) {
             throw new ConfigException("Path $path is not writable");
         }
