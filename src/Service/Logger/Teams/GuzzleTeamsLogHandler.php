@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Perbility\Console\Service\Logger\Teams;
 
 use GuzzleHttp\Client;
@@ -12,29 +15,33 @@ use Monolog\Logger;
 class GuzzleTeamsLogHandler extends TeamsLogHandler
 {
     /** @var string */
-    private $url;
-    
+    private string $url;
+
     /** @var Client */
-    private $client;
-    
+    private Client $client;
+
     /**
      * @param Client $client
-     * @param $url
+     * @param string $url
      * @param int $level
      * @param bool $bubble
+     * @param int $maxLengthContext
+     * @param int $maxLengthMessage
      */
     public function __construct(
         Client $client,
-        $url,
-        $level = Logger::DEBUG,
-        $bubble = true
+        string $url,
+        int $level = Logger::DEBUG,
+        bool $bubble = true,
+        int $maxLengthContext = 500,
+        int $maxLengthMessage = 20000
     ) {
-        parent::__construct($url, $level, $bubble);
+        parent::__construct($url, $level, $bubble, $maxLengthContext, $maxLengthMessage);
         
         $this->url = $url;
         $this->client = $client;
     }
-    
+
     /**
      * Writes the record down to the log of the implementing handler
      *
