@@ -22,6 +22,18 @@ use Psr\Log\NullLogger;
 class MsTeamsMonologServiceProvider implements ServiceProviderInterface
 {
     /**
+     * According to Microsoft the maximum length of a Teams message is approximately 28 KB per post.
+     * In our tests a message gets rejected at about 26,000 Bytes so the sum of the maximum lengths defined
+     * below should not exceed 25,000 Bytes. See HX-21712 for details.
+     */
+    public const DEFAULT_TEAMS_MAX_LENGTH_CONTEXT = 500;
+
+    /**
+     * @see DEFAULT_TEAMS_MAX_LENGTH_CONTEXT
+     */
+    public const DEFAULT_TEAMS_MAX_LENGTH_MESSAGE = 20000;
+
+    /**
      * Registers services on the given app.
      *
      * @param Container $app
@@ -51,8 +63,8 @@ class MsTeamsMonologServiceProvider implements ServiceProviderInterface
                     'name' => 'MS Teams',
                     'level' => Logger::INFO,
                     'bubble' => true,
-                    'maxLengthContext' => 500,
-                    'maxLengthMessage' => 20000,
+                    'maxLengthContext' => self::DEFAULT_TEAMS_MAX_LENGTH_CONTEXT,
+                    'maxLengthMessage' => self::DEFAULT_TEAMS_MAX_LENGTH_MESSAGE,
                 ];
 
                 if (isset($webhookConfigs['_default'])) {

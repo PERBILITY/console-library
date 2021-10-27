@@ -33,8 +33,8 @@ class GuzzleTeamsLogHandler extends TeamsLogHandler
         string $url,
         int $level = Logger::DEBUG,
         bool $bubble = true,
-        int $maxLengthContext = 500,
-        int $maxLengthMessage = 20000
+        int $maxLengthContext = MsTeamsMonologServiceProvider::DEFAULT_TEAMS_MAX_LENGTH_CONTEXT,
+        int $maxLengthMessage = MsTeamsMonologServiceProvider::DEFAULT_TEAMS_MAX_LENGTH_MESSAGE
     ) {
         parent::__construct($url, $level, $bubble, $maxLengthContext, $maxLengthMessage);
         
