@@ -136,13 +136,13 @@ class LocalStore
     }
 
     /**
-     * Locks the store exclusive
+     * Locks the store exclusively
      * @param bool $nonblocking
      *
      * @throws StoreNotInitializedException if store is not initialized
      * @throws LockException if lock cannot be acquired
      */
-    public function lock($nonblocking = false)
+    public function lock(bool $nonblocking = false): void
     {
         $this->assertInitialized();
         
@@ -150,22 +150,23 @@ class LocalStore
             return;
         }
         
+        $lockFilePath = $this->path . '/' . self::LOCK_FILE;
         $handle = fopen($this->path . '/' . self::LOCK_FILE, 'r+');
         if (!flock($handle, $nonblocking ? LOCK_EX|LOCK_NB : LOCK_EX)) {
-            throw new LockException("Lock failed");
+            throw new LockException('Lock failed ' . $lockFilePath);
         }
         
         $this->lockHandle = $handle;
-        $this->log->debug("Acquired lock");
+        $this->log->info('Acquired lock ' . $lockFilePath);
     }
 
     /**
-     * Release exclusiv lock
+     * Release exclusive lock
      * 
      * @throws StoreNotInitializedException if store is not initialized
      * @throws LockException if lock cannot be released
      */
-    public function unlock()
+    public function unlock(): void
     {
         $this->assertInitialized();
         
@@ -173,13 +174,14 @@ class LocalStore
             return;
         }
         
+        $lockFilePath = $this->path . '/' . self::LOCK_FILE;
         if (!flock($this->lockHandle, LOCK_UN)) {
-            throw new LockException("Unlock failed");
+            throw new LockException('Unlock failed ' . $lockFilePath);
         }
         
         fclose($this->lockHandle);
         $this->lockHandle = null;
-        $this->log->debug("Released lock");
+        $this->log->info('Released lock ' . $lockFilePath);
     }
     
     /**
